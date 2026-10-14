@@ -33,6 +33,9 @@ Revision 5 delivered: output/SENEXA_CompileX_Hacktoberfest_Final.pptx and matchi
 
 
 - [x] 6.6 done: Anonymous/Google onboarding, animated sensor setup, glossary, classified exports and dynamic stats.
-- [ ] 6.7 in progress: Standalone webpage source and deployment guide.
+- [x] 6.7 done: Standalone webpage source and deployment guide.
 
 Final application validation: production build, 7 unit tests, 4 gateway tests, 4 browser workflows, desktop/mobile inspection, offline production reload and zero production npm audit findings passed. Anonymous Firebase authentication verified. Firestore rules deployment and Google authorized-domain/provider setup require project owner configuration. GitHub owner identity verified as CraftoGamerz.
+
+Published: https://craftogamerz.github.io/SENEXA/ . Owner-authenticated push to main succeeded as CraftoGamerz. GitHub Actions run 38607483975 passed. Live HTTP 200, dashboard and machine navigation passed with no browser errors. Clean source is in webpage/ and output/SENEXA_Web_App_Source.zip.
+
