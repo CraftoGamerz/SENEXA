@@ -1,80 +1,69 @@
-# SENEXA · Industrial Performance Intelligence
+# SENEXA
 
-> **Treat your machines like elite athletes.**
-> An AI-driven predictive maintenance platform designed for Indian MSMEs, preventing machine breakdowns before they happen by monitoring real-time IoT sensor data and ML anomaly detection.
+Industrial performance intelligence for the factory floor.
 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
+SENEXA is a React and TypeScript workspace for machine monitoring, anomaly review and maintenance. It runs as a GitHub Pages demo or connects to a local Python gateway over the factory LAN.
 
-## 📖 Overview
+## Start here
 
-Many Indian MSMEs face significant productivity bottlenecks due to unexpected machine breakdowns. Traditional small factories rely on static maintenance schedules or manual inspections, leading to costly downtime. 
+```sh
+npm ci
+npm run dev
+```
 
-**Senexa** democratizes "smart maintenance" with a plug-and-play, budget-conscious alternative. It uses an IoT-cloud-AI pipeline to monitor machine vitals (vibration, temperature, current) and applies ML ensemble models to detect early warning signs of mechanical fatigue.
+Open `http://localhost:5173`. See [DEPLOYMENT.md](DEPLOYMENT.md) for Firebase, GitHub Pages, LAN hosting, secrets and Docker instructions.
+
+## Included
+
+- Minimal responsive SaaS dashboard, bundled fonts, Lucide icons and light/dark themes.
+- Dynamic simulated telemetry, time-window controls, trends, condition distribution and machine inspection.
+- Google, anonymous and email Firebase authentication, password reset and private workspace snapshots.
+- Profession onboarding and an animated, explicitly simulated sensor-pairing walkthrough.
+- Machine registration, search, status filters, anomaly acknowledgement and deduplicated work orders.
+- Engineer assignment, due dates, progress, notes and separately recorded technician outcomes.
+- Filtered CSV records, classified datasets and Markdown AI briefs with data provenance and limitations.
+- Searchable explanations for complex monitoring and ML terms.
+- Local browser persistence, per-account isolation, separate demo/live workspaces and validated backup/restore.
+- FastAPI gateway, SQLite telemetry storage, HTTP ingestion, optional MQTT bridge and an external simulator.
+- Real local Isolation Forest training, validation, explicit promotion and rollback.
+- Production offline app shell, local LAN hosting, Docker deployment and GitHub Pages Actions workflow.
+
+## Architecture
 
 ```text
-https://craftogamerz.github.io/Senexa/
+Sensor / simulator -> HTTP or MQTT -> Local gateway -> SQLite + local detection
+                                             |
+                                      LAN dashboard
+                                             |
+                                Optional Firebase workspace sync
 ```
-## ✨ Key Features
 
-### 1. Premium Landing Page & Live Console
-Instead of generic marketing graphics, the landing page features a **Live Operations Console**. It streams real-time simulated MQTT gateway logs, ML inference results, and live metric tiles (vibration, temperature, anomaly score), demonstrating the product's value instantly.
+The browser demo runs without a gateway. The gateway simulator generates labelled synthetic samples. Physical sensors use the same ingestion contract with their own source label. The app does not automatically send data to an external AI service.
 
-### 2. Seamless Auth & Hardware Onboarding
-- **Authentication Modal**: Clean login/signup interface.
-- **2-Step Onboarding**: Users select their organization type from a dropdown and simulate pairing IoT sensors (VIB-01, TEMP-01, CURR-01, RPM-01) to the gateway with an animated pairing sequence.
+## Source layout
 
-### 3. Comprehensive 6-Page Dashboard
-Once onboarded, users access a dense, high-performance dashboard:
-- **Dashboard**: KPIs, Featured Asset (CNC-01), Machine Health Matrix, Live Anomaly Feed, Sensor Telemetry Gauges, ML Ensemble Status, Vibration Charts, and Maintenance Queue.
-- **Machines**: Full asset registry with health rings and vitals.
-- **Anomalies**: Deep-dive into ML detection streams, detection rate charts, and top affected assets.
-- **Analytics**: Plant health trends, OEE breakdown, anomaly pie charts, downtime cause analysis, and an asset performance leaderboard.
-- **Maintenance**: AI-generated work orders, engineer workload management, and cost-savings analysis.
-- **Settings**: Granular control over sensor thresholds, MQTT gateways, ML retraining, and alert channels (SMS, WhatsApp, Email).
+```text
+src/                 React app, domain validation, reports and Firebase adapter
+public/              Favicon and production service worker
+ gateway/            FastAPI service, simulator, API contract and tests
+ e2e/                Browser workflow tests
+ firestore.rules     Owner-only snapshot permissions
+ .github/workflows/  Tested GitHub Pages deployment
+ legacy/             Preserved original prototype
+```
 
-## 🎨 Visual Strategy & Design System
+## Quality checks
 
-Senexa uses a distinctive "Athletic Industrial" design language—treating machine data with the same intensity as elite sports analytics.
+```sh
+npm test
+npm run build
+python -m pytest gateway/test_gateway.py -q
+```
 
-- **Color Palette**: Pure black/dark gray backgrounds with **Neon Orange** (`#ff5a00`) and **Metallic Silver** gradients for high contrast and premium feel. Professional off-white (`#efece6`) for light mode.
-- **Typography**: 
-  - `Space Grotesk` for powerful, geometric headings.
-  - `DM Sans` for clean, condensed body text.
-  - `JetBrains Mono` for technical telemetry data.
-- **Information Density**: Minimal whitespace, packed data grids, and monospace telemetry numbers to create a "mission control" aesthetic.
-- **Dark/Light Mode**: Full theme toggle support that respects professional environments.
+Browser tests cover maintenance, persistence, mobile navigation, gateway integration, onboarding and filtered exports. Instructions for running them are in DEPLOYMENT.md. Production auth requires enabled providers and authorized domains. Firestore requires the supplied rules to be deployed by the project owner.
 
-## 🛠 Tech Stack
+## Scope and evidence
 
-- **Frontend**: HTML5, CSS3 (Custom Properties, CSS Grid, Flexbox), Vanilla JavaScript (ES6)
-- **Charts & Visualizations**: Chart.js
-- **Icons**: Font Awesome 6
-- **Fonts**: Google Fonts (Space Grotesk, DM Sans, JetBrains Mono)
+All showcase values are simulated. Condition indices and threshold classifications are heuristics, not failure probabilities. The local model sanity gate reports only its held-out normal-sample flag rate. It does not establish field accuracy, savings or remaining life. Inspection outcomes remain distinct from model outputs. No payment, multi-user organization sharing, industrial actuation or third-party messaging provider is included.
 
-## 🚀 Getting Started
-
-This project is built entirely in a single `index.html` file with no build steps required.
-
-1. Clone or download the repository.
-2. Open `index.html` in any modern web browser (Chrome, Firefox, Edge, Safari).
-3. Explore the landing page, click **Sign Up**, complete the onboarding simulation, and view the dashboard.
-
-## 🧠 The ML Ensemble Architecture (Simulated)
-
-The dashboard visualizes a 4-model ensemble approach to anomaly detection:
-1. **Isolation Forest**: Flags vibration anomalies (94.2% accuracy).
-2. **Autoencoder**: Detects pattern reconstruction failures (91.8% accuracy).
-3. **Statistical Thresholding**: Rule-based fallback (88.5% accuracy).
-4. **LSTM Sequence**: Time-series prediction (89.7% accuracy).
-
-*The system uses a Majority Vote (3/4) to trigger critical alerts, simulating real edge-inference pipelines.*
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-*Built for thin-margin factories that can't afford enterprise IoT.*
+Built by CompileX for SENEXA.

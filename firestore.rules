@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid}/workspaces/{workspaceId} {
+      function owner() { return request.auth != null && request.auth.uid == uid && workspaceId == 'main'; }
+      function validSnapshot() {
+        let d = request.resource.data;
+        let p = d.payload;
+        return d.keys().hasOnly(['version', 'payload', 'updatedAt'])
+          && d.version == 1 && d.updatedAt == request.time
+          && p is map && p.keys().hasOnly(['version','name','industry','machines','alerts','orders','thresholds','updatedAt','profile','dataset'])
+          && p.version == 1 && p.name is string && p.name.size() > 0 && p.name.size() <= 100
+          && p.industry is string && p.industry.size() <= 100
+          && p.machines is list && p.machines.size() <= 500
+          && p.alerts is list && p.alerts.size() <= 500
+          && p.orders is list && p.orders.size() <= 500
+          && p.thresholds is map && p.thresholds.keys().hasOnly(['vibration','temperature','current'])
+          && p.thresholds.vibration is number && p.thresholds.vibration > 0 && p.thresholds.vibration <= 100
+          && p.thresholds.temperature is number && p.thresholds.temperature > 0 && p.thresholds.temperature <= 250
+          && p.thresholds.current is number && p.thresholds.current > 0 && p.thresholds.current <= 1000
+          && p.updatedAt is string && (!('dataset' in p) || p.dataset in ['demo','live'])
+          && (!('profile' in p) || (p.profile is map
+            && p.profile.keys().hasOnly(['displayName','profession'])
+            && p.profile.displayName is string && p.profile.displayName.size() <= 100
+            && p.profile.profession in ['owner','manager','engineer','operator']));
+      }
+      allow read, delete: if owner();
+      allow create, update: if owner() && validSnapshot();
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

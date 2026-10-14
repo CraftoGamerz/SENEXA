@@ -1,0 +1,5 @@
+const CACHE='senexa-shell-v1';
+self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE);await cache.addAll(typeof PRECACHE==='undefined'?['./']:PRECACHE);await self.skipWaiting();})()));
+self.addEventListener('activate',event=>event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith('senexa-shell-')&&key!==CACHE)await caches.delete(key);await self.clients.claim();})()));
+self.addEventListener('fetch',event=>{const url=new URL(event.request.url);if(event.request.method!=='GET'||url.origin!==self.location.origin||url.pathname.includes('/api/')||url.pathname.includes('/legacy/'))return;
+ event.respondWith((async()=>{const cache=await caches.open(CACHE);try{const response=await fetch(event.request);if(response.ok&&response.type==='basic')await cache.put(event.request,response.clone());return response;}catch{const stored=await cache.match(event.request);if(stored)return stored;if(event.request.mode==='navigate'){const root=await cache.match(new URL('./',self.registration.scope).href);if(root)return root;}return Response.error();}})());});

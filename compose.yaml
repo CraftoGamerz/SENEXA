@@ -1,0 +1,13 @@
+services:
+  gateway:
+    build: .
+    ports:
+      - '8000:8000'
+    environment:
+      SENEXA_GATEWAY_TOKEN: ${SENEXA_GATEWAY_TOKEN:?Set a long random gateway token in .env}
+      SENEXA_ALLOWED_ORIGINS: ${SENEXA_ALLOWED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}
+    volumes:
+      - gateway-data:/app/gateway/data
+    restart: unless-stopped
+volumes:
+  gateway-data:
